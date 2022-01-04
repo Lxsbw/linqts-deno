@@ -579,7 +579,13 @@ class Tools {
   /**
    * Determine if two objects are equal
    */
-  static equal = <T, U>(a: T, b: U): boolean => Object.entries(a).every(([key, val]) => (Tools.isObj(val) ? Tools.equal(b[key], val) : b[key] === val));
+  static equal = <T, U>(a: T | any, b: U | any) => {
+    if (a === b) return true;
+    if (typeof a != typeof b) return false;
+    if (!(a instanceof Object)) return a === b;
+    // Cannot compare simple types
+    Object.entries(a).every(([key, val]) => (Tools.isObj(val) ? Tools.equal(b[key], val) : b[key] === val));
+  };
 
   /**
    * Creates a function that negates the result of the predicate
