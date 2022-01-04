@@ -1,6 +1,6 @@
 # Linq for TypeScript
 
-[![linqts](https://raw.githubusercontent.com/Lxsbw/linqts/master/linqts.png)](https://www.typescriptlang.org/)
+[![linqts](https://raw.githubusercontent.com/Lxsbw/linqts-deno/main/linqts.png)](https://www.typescriptlang.org/)
 
 ## From
 
@@ -12,8 +12,6 @@ Thank you
 
 ```typescript
 import { Linq } from 'https://deno.land/x/linqts/mod.ts';
-
-let orderByID, persons, thenByAge, thenByName;
 
 interface Person {
   ID: number;
@@ -31,14 +29,7 @@ persons = [
   { ID: 2, Age: 15, Name: 'F' }
 ];
 
-orderByID = new Linq<Person>(persons).OrderByDescending(x => x.ID).ToArray();
-
-thenByAge = new Linq<Person>(persons)
-  .OrderByDescending(x => x.ID)
-  .ThenBy(x => x.Age)
-  .ToArray();
-
-thenByName = new Linq<Person>(persons)
+const rst = new Linq<Person>(persons)
   .OrderByDescending(x => x.ID)
   .ThenBy(x => x.Age)
   .ThenByDescending(x => x.Name)
