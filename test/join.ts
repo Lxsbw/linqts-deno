@@ -1,4 +1,4 @@
-import Linq from '../src/linq';
+import Linq from '../src/linq.ts';
 
 const persons = [
   { CityID: 1, Name: 'ABC' },

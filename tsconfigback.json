@@ -6,7 +6,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declarationDir": "dist",
-    "outDir": "dist"
+    "outDir": "dist",
+    "strict": false
   },
   "include": ["src"]
 }

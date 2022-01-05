@@ -1,4 +1,4 @@
-import Linq from '../src/linq';
+import Linq from '../src/linq.ts';
 interface Person {
   Age: number;
   Name: string;

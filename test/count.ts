@@ -1,6 +1,6 @@
 let intArray, intCount, intCount2, stringCount, stringCount2, stringList;
 
-import Linq from '../src/linq';
+import Linq from '../src/linq.ts';
 
 interface Bill {
   bill: number;
