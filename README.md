@@ -99,7 +99,76 @@ const rstInt = new Linq(intArr).Distinct().ToArray();              // => [ 0, 1,
 const rstObj = new Linq(parameters).Select(x => x.Name).Distinct().ToArray(); // => [ "正一郎", "清次郎", "征史郎" ]
 ```
 
-### xx. ThenBy & ThenByDescending
+### 8. First & FirstOrDefault
+
+```typescript
+const numbers = [1, 2, 3, 5, 7, 11];
+const parameters = [
+  { ID: 5, Name: '正一郎' },
+  { ID: 13, Name: '清次郎' },
+  { ID: 25, Name: '誠三郎' },
+  { ID: 42, Name: '征史郎' }
+];
+
+const rstInt = new Linq(numbers).First();                                      // => 1
+const rstObj = new Linq<Person>(parameters).FirstOrDefault(x => x.ID === 30);  // => undefined
+const rstObj = new Linq<Person>(parameters).FirstOrDefault(x => x.ID === 42);  // => { ID: 42, Name: '征史郎' }
+```
+
+### 9. Remove
+
+```typescript
+let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+console.log(numbers.length);                                    // => 10
+new Linq(numbers).Remove(6);
+console.log(numbers.length);                                    // => 9
+```
+
+### 10. Remove
+
+```typescript
+let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+console.log(numbers.length);                                    // => 10
+new Linq(numbers).Remove(6);
+console.log(numbers.length);                                    // => 9
+```
+
+### 11. OrderBy & OrderByDescending
+
+```typescript
+interface Person {
+  ID: number;
+  Name: string;
+}
+const parameters = [
+  { ID: 0, Name: '正一郎' },
+  { ID: 3, Name: '清次郎' },
+  { ID: 2, Name: '誠三郎' },
+  { ID: 5, Name: '征史郎' }
+];
+
+const rst = new Linq<Person>(parameters).OrderBy(x => x.ID).ToArray();
+const rstDesc = new Linq<Person>(parameters).OrderByDescending(x => x.ID).ToArray();
+// rst =>
+// [
+//   { ID: 0, Name: "正一郎" },
+//   { ID: 2, Name: "誠三郎" },
+//   { ID: 3, Name: "清次郎" },
+//   { ID: 5, Name: "征史郎" }
+// ]
+// rstDesc =>
+// [
+//   { ID: 5, Name: "征史郎" },
+//   { ID: 3, Name: "清次郎" },
+//   { ID: 2, Name: "誠三郎" },
+//   { ID: 0, Name: "正一郎" }
+// ]
+
+```
+
+### 12. ThenBy & ThenByDescending
 
 ```typescript
 interface Person {
@@ -117,8 +186,31 @@ const persons = [
   { ID: 2, Age: 15, Name: 'F' }
 ];
 
-const rst = new Linq<Person>(persons).OrderByDescending(x => x.ID).ThenBy(x => x.Age).ThenByDescending(x => x.Name).ToArray();
-// =>
+const rst = new Linq<Person>(persons)
+  .OrderByDescending(x => x.ID)
+  .ThenBy(x => x.Age)
+  .ThenByDescending(x => x.Name).ToArray();
+// 1 OrderByDescending =>
+// [
+//   { ID: 2, Age: 2, Name: "G" },
+//   { ID: 2, Age: 18, Name: "C" },
+//   { ID: 2, Age: 15, Name: "F" },
+//   { ID: 1, Age: 25, Name: "B" },
+//   { ID: 1, Age: 30, Name: "D" },
+//   { ID: 1, Age: 25, Name: "E" },
+//   { ID: 0, Age: 30, Name: "A" }
+// ]
+// 2 ThenBy =>
+// [
+//   { ID: 2, Age: 2, Name: "G" },
+//   { ID: 2, Age: 15, Name: "F" },
+//   { ID: 2, Age: 18, Name: "C" },
+//   { ID: 1, Age: 25, Name: "B" },
+//   { ID: 1, Age: 25, Name: "E" },
+//   { ID: 1, Age: 30, Name: "D" },
+//   { ID: 0, Age: 30, Name: "A" }
+// ]
+// 3 ThenByDescending =>
 // [
 //   { ID: 2, Age: 2, Name: "G" },
 //   { ID: 2, Age: 15, Name: "F" },
