@@ -125,17 +125,7 @@ new Linq(numbers).Remove(6);
 console.log(numbers.length);                                    // => 9
 ```
 
-### 10. Remove
-
-```typescript
-let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-console.log(numbers.length);                                    // => 10
-new Linq(numbers).Remove(6);
-console.log(numbers.length);                                    // => 9
-```
-
-### 11. OrderBy & OrderByDescending
+### 10. OrderBy & OrderByDescending
 
 ```typescript
 interface Person {
@@ -168,7 +158,7 @@ const rstDesc = new Linq<Person>(parameters).OrderByDescending(x => x.ID).ToArra
 
 ```
 
-### 12. ThenBy & ThenByDescending
+### 11. ThenBy & ThenByDescending
 
 ```typescript
 interface Person {
@@ -220,6 +210,219 @@ const rst = new Linq<Person>(persons)
 //   { ID: 1, Age: 30, Name: "D" },
 //   { ID: 0, Age: 30, Name: "A" }
 // ]
+```
+
+### 12. GroupBy
+
+```typescript
+interface GroupObj {
+  id: number;
+  name: string;
+  category: string;
+  countries: string[];
+}
+const data = [
+  { id: 1, name: 'one', category: 'fruits', countries: ['lxsbw', 'xliecz'] },
+  { id: 1, name: 'one', category: 'fruits', countries: ['Italy', 'Austria'] },
+  { id: 2, name: 'two', category: 'vegetables', countries: ['Italy', 'Germany'] }
+];
+
+const rstKey = new Linq<GroupObj>(data).GroupBy(el => el.category);
+const rstKeys = new Linq<GroupObj>(data).GroupBy(el => {
+  return { id: el.id, category: el.category };
+});
+// rstKey =>
+// [
+//   {
+//     key: 1, count: 2,
+//     elements: [
+//       { id: 1, name: "one", category: "fruits", countries: [Array] },
+//       { id: 1, name: "one", category: "fruits", countries: [Array] }
+//     ]
+//   },
+//   {
+//     key: 2, count: 1,
+//     elements: [ { id: 2, name: "two", category: "vegetables", countries: [Array] } ]
+//   }
+// ]
+// rstKeys =>
+// [
+//   {
+//     key: { id: 1, category: "fruits" }, count: 2,
+//     elements: [
+//       { id: 1, name: "one", category: "fruits", countries: [Array] },
+//       { id: 1, name: "one", category: "fruits", countries: [Array] }
+//     ]
+//   },
+//   {
+//     key: { id: 2, category: "vegetables" }, count: 1,
+//     elements: [ { id: 2, name: "two", category: "vegetables", countries: [Array] } ]
+//   }
+// ]
+```
+
+### 13. DistinctBy
+
+```typescript
+const data = [
+  { id: 1, name: 'one', category: 'fruits', countries: ['lxsbw', 'xliecz'] },
+  { id: 1, name: 'one', category: 'fruits', countries: ['Italy', 'Austria'] },
+  { id: 2, name: 'two', category: 'vegetables', countries: ['Italy', 'Germany'] }
+];
+
+const rstKey = new Linq(data).DistinctBy(x => x.category).ToArray();
+const rstKeys = new Linq(data)
+  .DistinctBy(el => {
+    return { id: el.id, category: el.category };
+  })
+  .ToArray();
+// rstKey =>
+// [
+//   { id: 1, name: "one", category: "fruits", countries: [ "lxsbw", "xliecz" ] },
+//   { id: 2, name: "two", category: "vegetables", countries: [ "Italy", "Germany" ] }
+// ]
+// rstKeys =>
+// [
+//   { id: 1, name: "one", category: "fruits", countries: [ "lxsbw", "xliecz" ] },
+//   { id: 2, name: "two", category: "vegetables", countries: [ "Italy", "Germany" ] }
+// ]
+```
+
+### 14. Join
+
+```typescript
+const persons = [
+  { CityID: 1, Name: 'ABC' },
+  { CityID: 1, Name: 'EFG' },
+  { CityID: 2, Name: 'HIJ' },
+  { CityID: 3, Name: 'KLM' },
+  { CityID: 3, Name: 'NOP' },
+  { CityID: 4, Name: 'QRS' },
+  { CityID: 5, Name: 'TUV' }
+];
+const cities = [
+  { ID: 1, Name: 'Guangzhou' },
+  { ID: 2, Name: 'Shenzhen' },
+  { ID: 3, Name: 'Beijing' },
+  { ID: 4, Name: 'Shanghai' }
+];
+
+const rst = new Linq(persons)
+  .Join(
+    new Linq(cities),
+    p => p.CityID,
+    c => c.ID,
+    (p, c) => {
+      return { CityID: c.ID, PersonName: p.Name, CityName: c.Name };
+    }
+  )
+  .ToArray();
+// rst =>
+// [
+//   { CityID: 1, PersonName: "ABC", CityName: "Guangzhou" },
+//   { CityID: 1, PersonName: "EFG", CityName: "Guangzhou" },
+//   { CityID: 2, PersonName: "HIJ", CityName: "Shenzhen" },
+//   { CityID: 3, PersonName: "KLM", CityName: "Beijing" },
+//   { CityID: 3, PersonName: "NOP", CityName: "Beijing" },
+//   { CityID: 4, PersonName: "QRS", CityName: "Shanghai" }
+// ]
+```
+
+### 15. ToDictionary
+
+```typescript
+const parameters = [
+  { ID: 0, Age: 52, Name: '正一郎' },
+  { ID: 8, Age: 28, Name: '清次郎' },
+  { ID: 3, Age: 20, Name: '誠三郎' },
+  { ID: 4, Age: 18, Name: '征史郎' }
+];
+
+const dictionary = new Linq(parameters).ToDictionary(x => x.ID).ToArray();
+const dictionaryObj = new Linq(parameters)
+  .ToDictionary(x => { return { ID: x.ID, Name: x.Name }; })
+  .ToArray();
+// dictionary =>
+// [
+//   { Key: 0, Value: { ID: 0, Age: 52, Name: "正一郎" } },
+//   { Key: 8, Value: { ID: 8, Age: 28, Name: "清次郎" } },
+//   { Key: 3, Value: { ID: 3, Age: 20, Name: "誠三郎" } },
+//   { Key: 4, Value: { ID: 4, Age: 18, Name: "征史郎" } }
+// ]
+// dictionaryObj =>
+// [
+//   { Key: { ID: 0, Name: "正一郎" }, Value: { ID: 0, Age: 52, Name: "正一郎" } },
+//   { Key: { ID: 8, Name: "清次郎" }, Value: { ID: 8, Age: 28, Name: "清次郎" } },
+//   { Key: { ID: 3, Name: "誠三郎" }, Value: { ID: 3, Age: 20, Name: "誠三郎" } },
+//   { Key: { ID: 4, Name: "征史郎" }, Value: { ID: 4, Age: 18, Name: "征史郎" } }
+// ]
+```
+
+### 16. Sum
+
+```typescript
+interface Person {
+  Age: number;
+  Name: string;
+}
+const parameters = [
+  { Age: 52, Name: '正一郎' },
+  { Age: 28, Name: '清次郎' },
+  { Age: 20, Name: '誠三郎' },
+  { Age: 18, Name: '征史郎' }
+];
+
+const rst = new Linq<Person>(parameters).Sum(x => x.Age);       // => 118
+```
+
+### 17. Max
+
+```typescript
+interface Person {
+  Age: number;
+  Name: string;
+}
+const parameters = [
+  { Age: 52, Name: '正一郎' },
+  { Age: 28, Name: '清次郎' },
+  { Age: 20, Name: '誠三郎' },
+  { Age: 18, Name: '征史郎' }
+];
+
+const rst = new Linq<Person>(parameters).Max(x => x.Age);       // => 52
+```
+
+### 18. Min
+
+```typescript
+interface Person {
+  Age: number;
+  Name: string;
+}
+const parameters = [
+  { Age: 52, Name: '正一郎' },
+  { Age: 28, Name: '清次郎' },
+  { Age: 20, Name: '誠三郎' },
+  { Age: 18, Name: '征史郎' }
+];
+
+const rst = new Linq<Person>(parameters).Min(x => x.Age);       // => 18
+```
+
+### 19. Take
+
+```typescript
+const texts = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+const rst = new Linq(texts).Take(4).ToArray();                     // => [ "Sun", "Mon", "Tue", "Wed" ]
+```
+
+### 20. Skip
+
+```typescript
+const texts = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+const rst = new Linq(texts).Skip(4).ToArray();                     // => [ "Thu", "Fri", "Sat" ]
 ```
 
 ## License
