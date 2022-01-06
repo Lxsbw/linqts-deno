@@ -15,20 +15,20 @@ Thank you
 import { Linq } from 'https://deno.land/x/linqts/mod.ts';
 ```
 
-### 1. Any
-
-```typescript
-const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-const rst = new Linq<number>(numbers).Any(x => x < 5);             // => true
-```
-
-### 2. All
+### 1. All
 
 ```typescript
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const rst = new Linq<number>(numbers).All(x => x < 5);             // => false
+```
+
+### 2. Any
+
+```typescript
+const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+const rst = new Linq<number>(numbers).Any(x => x < 5);             // => true
 ```
 
 ### 3. Count
