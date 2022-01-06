@@ -12,9 +12,7 @@ reaultB = new Linq<number>(numbers).Any(function (value) {
   return value >= 10;
 });
 
-reaultC = new Linq<number>(numbers).Any(function (value) {
-  return value < 5;
-});
+reaultC = new Linq<number>(numbers).Any(x => x < 5);
 
 console.log('reaultA:', reaultA);
 
