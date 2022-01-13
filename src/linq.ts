@@ -1,10 +1,13 @@
 type PredicateType<T> = (value?: T, index?: number, list?: T[]) => boolean;
 interface GroupType<T> {
-  key?: T;
+  key?: any;
   count?: number;
-  elements?: any;
+  elements?: T[];
 }
 
+/**
+ * LINQ to TypeScript (Language Integrated Query)
+ */
 class Linq<T> {
   protected _elements: T[];
 
@@ -203,9 +206,9 @@ class Linq<T> {
    */
   public GroupBy<TOut, TResult = T>(grouper: (key: T) => TOut, mapper: (element: T) => TResult = val => val as unknown as TResult): { [key: string]: TResult[] } {
     const initialValue: TResult[] = [];
-    const func = function (ac: GroupType<TOut>[], v: T) {
+    const func = function (ac: GroupType<TResult>[], v: T) {
       const key = grouper(v);
-      const existingGroup = new Linq<GroupType<TOut>>(ac).FirstOrDefault(x => Tools.equal(x.key, key));
+      const existingGroup = new Linq<GroupType<TResult>>(ac).FirstOrDefault(x => Tools.equal(x.key, key));
       const mappedValue = mapper(v);
 
       if (existingGroup) {
@@ -570,6 +573,9 @@ class OrderedList<T> extends Linq<T> {
   }
 }
 
+/**
+ * Tool method
+ */
 class Tools {
   /**
    * Checks if the argument passed is an object
@@ -603,6 +609,9 @@ class Tools {
     (a: T, b: T) =>
       previousComparer(a, b) || currentComparer(a, b);
 
+  /**
+   * Key comparer
+   */
   static keyComparer =
     <T>(_keySelector: (key: T) => string, descending?: boolean): ((a: T, b: T) => number) =>
     (a: T, b: T) => {
@@ -618,7 +627,7 @@ class Tools {
     };
 
   /**
-   * clone
+   * Clone data
    */
   static cloneDeep = <T>(obj: T) => {
     let result;
