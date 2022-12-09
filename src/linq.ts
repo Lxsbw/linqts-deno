@@ -148,6 +148,15 @@ class Linq<T> {
   }
 
   /**
+   * Returns distinct elements from a sequence by using the default equality comparer to compare values and this.Select method.
+   */
+  public DistinctMap<TOut>(): Linq<T | TOut>;
+  public DistinctMap<TOut>(selector: (element: T, index: number) => TOut): Linq<T | TOut>;
+  public DistinctMap<TOut>(selector?: (element: T, index: number) => TOut): Linq<T | TOut> {
+    return selector ? this.Select(selector).Distinct() : this.Distinct();
+  }
+
+  /**
    * Returns the element at a specified index in a sequence.
    */
   public ElementAt(index: number): T {
@@ -502,7 +511,7 @@ class Linq<T> {
       dicc[this.Select(key).ElementAt(i).toString()] = value ? this.Select(value).ElementAt(i) : v;
       dicc.Add({
         Key: this.Select(key).ElementAt(i),
-        Value: value ? this.Select(value).ElementAt(i) : v
+        Value: value ? this.Select(value).ElementAt(i) : v,
       });
       return dicc;
     }, new Linq<{ Key: TKey; Value: T | TValue }>());
