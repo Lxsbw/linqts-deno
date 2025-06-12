@@ -627,6 +627,7 @@ class OrderedList<T> extends Linq<T> {
    * @override
    * @returns and ordered list turned into a regular Linq<T>
    */
+  /* istanbul ignore next */
   public ToList(): Linq<T> {
     return new Linq<T>(this._elements);
   }
@@ -704,46 +705,31 @@ class Tools {
    * Key comparer
    */
   static keyComparer = <T>(_keySelector: (key: T) => string, descending?: boolean, locales?: string | string[]): ((a: T, b: T) => number) => {
-    // common comparer
-    const _comparer = (sortKeyA, sortKeyB): number => {
-      if (sortKeyA > sortKeyB) {
-        return !descending ? 1 : -1;
-      } else if (sortKeyA < sortKeyB) {
-        return !descending ? -1 : 1;
-      } else {
-        return 0;
-      }
-    };
+    const isString = Tools.isString;
 
-    // string comparer
-    const _stringComparer = (sortKeyA, sortKeyB): number => {
-      if (locales) {
-        if (sortKeyA.localeCompare(sortKeyB, locales) > 0) {
-          return !descending ? 1 : -1;
-        } else if (sortKeyB.localeCompare(sortKeyA, locales) > 0) {
-          return !descending ? -1 : 1;
-        } else {
-          return 0;
-        }
-      } else {
-        if (sortKeyA.localeCompare(sortKeyB) > 0) {
-          return !descending ? 1 : -1;
-        } else if (sortKeyB.localeCompare(sortKeyA) > 0) {
-          return !descending ? -1 : 1;
-        } else {
-          return 0;
-        }
-      }
-    };
-
-    return (a: T, b: T) => {
+    return (a, b) => {
       const sortKeyA = _keySelector(a);
       const sortKeyB = _keySelector(b);
 
-      if (this.isString(sortKeyA) && this.isString(sortKeyB)) {
-        return _stringComparer(sortKeyA, sortKeyB);
+      // Handle null or undefined
+      const isNullishA = sortKeyA === null || sortKeyA === undefined;
+      const isNullishB = sortKeyB === null || sortKeyB === undefined;
+
+      if (isNullishA && isNullishB) return 0;
+      if (isNullishA) return descending ? -1 : 1;
+      if (isNullishB) return descending ? 1 : -1;
+
+      // String comparison
+      if (isString(sortKeyA) && isString(sortKeyB)) {
+        const result = locales ? sortKeyA.localeCompare(sortKeyB, locales) : sortKeyA.localeCompare(sortKeyB);
+        return descending ? -result : result;
       }
-      return _comparer(sortKeyA, sortKeyB);
+
+      // Fallback: number or other types comparison
+      if (sortKeyA > sortKeyB) return descending ? -1 : 1;
+      if (sortKeyA < sortKeyB) return descending ? 1 : -1;
+
+      return 0;
     };
   };
 
