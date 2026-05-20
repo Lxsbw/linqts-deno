@@ -1,6 +1,6 @@
 # Linq for TypeScript
 
-[![linqts](https://deno.land/x/linqts@1.5.0/linqts.png)](https://www.typescriptlang.org/)
+[![linqts](https://deno.land/x/linqts@1.7.2/linqts.png)](https://www.typescriptlang.org/)
 
 ## From
 
